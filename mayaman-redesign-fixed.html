@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Mayaman na ba ko?</title>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Mayaman%20na%20ba%20ko%3F%22%2C%22short_name%22%3A%22Mayaman%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23eef2fa%22%2C%22theme_color%22%3A%22%232557d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon-192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22icon-512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  :root{
+    --safe-bottom:env(safe-area-inset-bottom);--safe-top:env(safe-area-inset-top);
+    --color-bg:#fcfcfc;--color-surface:#ffffff;--color-text:#1a181b;
+    --color-accent:#2557d4;--color-accent-600:#1d47b3;--color-accent-700:#163a95;--color-accent-100:#e7edfb;
+    --color-divider:#e7e7e8;--color-positive:#1a181b;--color-negative:#20bdb8;--color-teal:#20bdb8;
+    --color-neutral-200:#ececed;--color-neutral-900:#1a181b;--radius-lg:20px;
+    --font-heading:"Plus Jakarta Sans",system-ui,sans-serif;--font-body:"Plus Jakarta Sans",system-ui,sans-serif;--font-heading-weight:700;
+    --shadow-sm:0 1px 2px rgba(26,24,27,.06);--shadow-md:0 8px 24px rgba(26,24,27,.10);--shadow-lg:0 16px 40px rgba(26,24,27,.16);
+  }
+  .btn{border-radius:999px!important;font-family:var(--font-body)!important;font-weight:600!important}
+  .input{border-radius:16px!important}
+  .dialog{border-radius:24px!important}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--color-bg);color:var(--color-text);font-size:16px;font-family:var(--font-body)}
+  body{min-height:calc(100 * min(var(--vh,1vh),1vh))}
+  button,input,select{font:inherit}
+  button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit;color:inherit}
+  a{text-decoration:none}
+  .app-shell{width:100%;min-height:calc(100 * min(var(--vh,1vh),1vh));display:flex;flex-direction:column}
+  .topbar{padding:calc(16px + var(--safe-top)) 20px 14px;position:sticky;top:0;background:var(--color-bg);z-index:10}
+  .topbar h1{margin:0;font-size:21px;font-family:var(--font-heading);font-weight:400}
+  .date-line{margin:4px 0 0;color:color-mix(in srgb,var(--color-text) 55%,transparent);font-size:12px;font-family:var(--font-body)}
+  .main-area{flex:1;padding:4px 16px 116px;overflow:auto}
+  .view{display:none}.view.active{display:block}
+  .section{padding:16px;margin-bottom:12px;background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+  .section-title{margin:0 0 12px;font-size:12px;letter-spacing:.02em;font-weight:500;font-family:var(--font-body);color:color-mix(in srgb,var(--color-text) 55%,transparent);text-transform:none}
+  .section-dark{background:var(--color-accent);color:#fff}
+  .section-dark .name{color:#fff}
+  .section-dark .meta{color:rgba(255,255,255,.72)}
+  .section-dark .swatch{background:rgba(255,255,255,.22)!important;color:#fff}
+  .section-dark .positive{color:#fff}
+  .section-dark .negative{color:#ffd2bd}
+  .section-dark .section-title{color:rgba(255,255,255,.75)}
+  .balance{font-family:var(--font-heading);font-weight:800;font-size:clamp(26px,8vw,36px);margin:0;letter-spacing:0}
+  .negative{color:var(--color-negative)}
+  .positive{color:var(--color-positive)}
+  .button-row{display:flex;gap:8px;margin-top:14px}
+  .button-row .btn{flex:1}
+  .btn-sm{padding:4px 12px;font-size:11px}
+  .save-control{margin-top:10px;width:100%;display:flex}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0}
+  .row:last-child{border-bottom:0}
+  .name{font-weight:600;font-size:14.5px;font-family:var(--font-body)}
+  .meta{font-size:11.5px;color:color-mix(in srgb,var(--color-text) 55%,transparent);margin-top:2px}
+  .amount{font-weight:700;white-space:nowrap;font-family:var(--font-body);font-size:14px}
+  .swatch{width:38px;height:38px;border-radius:50%;flex:none;margin-right:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;font-family:var(--font-heading)}
+  .empty{color:color-mix(in srgb,var(--color-text) 55%,transparent);padding:18px 0;font-size:14px}
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:2px;padding:8px 8px calc(8px + var(--safe-bottom));background:var(--color-surface);box-shadow:0 -1px 0 var(--color-divider);z-index:20}
+  .bottom-nav::-webkit-scrollbar{display:none}
+  .bottom-nav button{flex:0 0 auto;min-width:66px;position:relative;border:0;border-radius:14px;background:transparent;color:#9a989b;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:8px 10px 6px;white-space:nowrap}
+  .bottom-nav button.active{color:#fff;background:var(--color-accent)}
+  .bottom-nav button.active::before{content:none}
+  .bottom-nav svg{width:20px;height:20px}
+  .fab{position:fixed;right:26px;bottom:calc(96px + var(--safe-bottom));width:54px;height:54px;border:0;border-radius:50%;background:var(--color-accent);color:var(--color-bg);display:grid;place-items:center;box-shadow:var(--shadow-md);z-index:21}
+  .fab svg{width:24px}
+  .fab:disabled,.btn:disabled{opacity:.45;cursor:not-allowed}
+  .month-nav{display:flex;align-items:center;justify-content:space-between;padding:6px 4px}
+  .month-nav button{width:34px;height:34px;border-radius:50%;border:0;background:color-mix(in srgb, var(--color-accent) 14%, transparent);color:var(--color-accent);font-size:18px;display:flex;align-items:center;justify-content:center}
+  .field{margin-bottom:16px}
+  .field label{display:block;color:color-mix(in srgb,var(--color-text) 65%,transparent);font-weight:600;font-size:12px;margin-bottom:6px}
+  .bar-track{height:9px;background:var(--color-neutral-200);overflow:hidden;border-radius:999px}
+  .bar-fill{height:100%;background:var(--color-negative);border-radius:999px}
+  .bar-row{margin:14px 0}
+  .bar-label{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+  .chart-legend{display:flex;gap:16px;margin-bottom:8px;font-size:12.5px;color:var(--color-text)}
+  .chart-legend span{display:flex;align-items:center;gap:6px}
+  .chart-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .income-spend-chart{display:block;overflow:visible}
+  .settings-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0}
+  .settings-row:last-child{border-bottom:0}
+  .collapsible-header{width:100%;border:0;background:transparent;display:flex;align-items:center;justify-content:space-between;padding:0;text-align:left}
+  .collapsible-header .chevron{color:color-mix(in srgb,var(--color-text) 55%,transparent);font-size:11px;margin-left:8px;flex:none}
+  .collapsible-body{margin-top:14px}
+  .schedule-row{align-items:flex-start}
+  .schedule-right{flex:none;margin-left:12px;text-align:right}
+  .sched-date{font-weight:600;font-size:12px;white-space:nowrap;font-family:var(--font-body)}
+  .sched-amount{color:var(--color-negative);font-weight:700;font-size:12px;margin-top:3px}
+  .lock-screen{position:fixed;inset:0;background:var(--color-bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+  .lock-title{font-family:var(--font-heading);font-size:22px;font-weight:800;margin:0}
+  .lock-sub{color:color-mix(in srgb,var(--color-text) 55%,transparent);font-size:13px;margin:8px 0 34px;font-family:var(--font-body)}
+  .lock-dots{display:flex;gap:16px;margin-bottom:40px}
+  .lock-dot{width:13px;height:13px;border-radius:50%;border:2px solid color-mix(in srgb,var(--color-text) 40%,transparent);background:transparent}
+  .lock-dot.filled{background:var(--color-accent);border-color:var(--color-accent)}
+  .lock-keypad{display:grid;grid-template-columns:repeat(3,72px);gap:16px}
+  .lock-key{width:72px;height:72px;border-radius:50%;border:0;background:var(--color-surface);box-shadow:var(--shadow-sm);font-family:var(--font-body);font-size:24px;font-weight:600;color:var(--color-text);display:flex;align-items:center;justify-content:center}
+  .lock-key:active{background:var(--color-accent-100)}
+  .lock-key.spacer{background:transparent;box-shadow:none;pointer-events:none}
+  .lock-key.backspace{background:transparent;box-shadow:none;font-size:19px;color:color-mix(in srgb,var(--color-text) 55%,transparent)}
+  .lock-error{color:var(--color-negative);font-size:12px;margin-top:18px;min-height:16px;font-weight:600}
+  .lock-screen.shake{animation:lockShake .4s}
+  @keyframes lockShake{10%,90%{transform:translateX(-4px)}20%,80%{transform:translateX(6px)}30%,50%,70%{transform:translateX(-10px)}40%,60%{transform:translateX(10px)}}
+  .sheet-overlay{position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 45%, transparent);z-index:50;display:flex;align-items:flex-end}
+  .sheet{width:100%;max-height:88%;overflow:auto;background:var(--color-bg);border-radius:28px 28px 0 0;box-shadow:var(--shadow-lg);padding:20px 20px calc(28px + var(--safe-bottom))}
+  .sheet h2{margin:0 0 18px;font-family:var(--font-heading)}
+  .hidden{display:none!important}
+  /* --- component styles that previously came from Canva's design-system bundle (_ds_bundle.css) --- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;padding:14px 20px;font-size:15px;line-height:1.2}
+  .btn-primary{background:var(--color-accent);color:#fff}
+  .btn-primary:active{background:var(--color-accent-600)}
+  .btn-secondary{background:var(--color-accent-100);color:var(--color-accent-700)}
+  .btn-secondary:active{background:color-mix(in srgb, var(--color-accent-100) 55%, var(--color-accent))}
+  .btn-ghost{background:transparent;color:color-mix(in srgb,var(--color-text) 60%,transparent)}
+  .input{width:100%;border:1px solid var(--color-divider);background:var(--color-surface);padding:12px 14px;color:var(--color-text);font-size:15px;appearance:none}
+  .input:focus{outline:2px solid var(--color-accent);outline-offset:1px}
+  .dialog-backdrop{position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 45%, transparent);z-index:60;display:flex;align-items:center;justify-content:center;padding:20px}
+  .dialog{background:var(--color-surface);padding:22px;width:min(340px,100%);box-shadow:var(--shadow-lg)}
+  .dialog-title{margin:0 0 10px;font-weight:700;font-size:17px;font-family:var(--font-heading)}
+  .dialog-body{margin:0 0 16px;font-size:14px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 75%,transparent)}
+  .seg{display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--color-accent-100)}
+  .seg-opt{flex:1;text-align:center;padding:9px 4px;border-radius:999px;font-size:13px;font-weight:600;color:var(--color-accent-700);cursor:pointer;position:relative}
+  .seg-opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+  .seg-opt:has(input:checked){background:var(--color-surface);color:var(--color-text);box-shadow:var(--shadow-sm)}
+  .tabbar{display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--color-accent-100);margin-bottom:14px}
+  .tabbar-opt{flex:1;text-align:center;padding:9px 4px;border-radius:999px;font-size:11.5px;font-weight:700;color:var(--color-accent-700);cursor:pointer;position:relative;line-height:1.25;display:flex;align-items:center;justify-content:center}
+  .tabbar-opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+  .tabbar-opt:has(input:checked){background:var(--color-accent);color:#fff}
+  .card-visual{border-radius:20px;padding:22px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+  .card-visual-top{display:flex;justify-content:flex-end}
+  .card-visual-brand{font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:.02em}
+  .card-visual-number{font-family:var(--font-heading);font-size:19px;letter-spacing:.08em;margin:18px 0}
+  .card-visual-meta{display:flex;justify-content:space-between;gap:12px}
+  .card-visual-meta span{display:block;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;opacity:.75}
+  .card-visual-meta strong{display:block;font-size:14px;font-weight:700;margin-top:3px}
+  .credit-limit-card{display:flex;align-items:center;gap:16px;color:#fff}
+  .credit-limit-card .credit-ring{flex:none;display:flex}
+  .credit-limit-text{flex:1;min-width:0}
+  .credit-limit-text span{display:block;font-size:12.5px;opacity:.85}
+  .credit-limit-text strong{display:block;font-size:16.5px;font-weight:800;margin-top:3px}
+  .copy-btn{border:0;background:var(--color-accent-100);color:var(--color-accent-700);border-radius:8px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;flex:none}
+  .card-copy-btn{border:0;background:rgba(255,255,255,.22);color:#fff;border-radius:8px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;flex:none}
+  .value-with-copy{display:flex;align-items:center;gap:8px}
+  @media(min-width:720px){.main-area{width:min(720px,100%);margin:0 auto}.topbar{padding-left:max(20px,calc((100% - 720px)/2));padding-right:max(20px,calc((100% - 720px)/2))}}
+</style>
+</head>
+<body>
+<div id="lock-screen" class="lock-screen">
+  <p class="lock-title">Mayaman na ba ko?</p>
+  <p class="lock-sub">Enter Passcode</p>
+  <div class="lock-dots" id="lock-dots">
+    <span class="lock-dot"></span><span class="lock-dot"></span><span class="lock-dot"></span><span class="lock-dot"></span>
+  </div>
+  <div class="lock-keypad">
+    <button type="button" class="lock-key" data-key="1">1</button>
+    <button type="button" class="lock-key" data-key="2">2</button>
+    <button type="button" class="lock-key" data-key="3">3</button>
+    <button type="button" class="lock-key" data-key="4">4</button>
+    <button type="button" class="lock-key" data-key="5">5</button>
+    <button type="button" class="lock-key" data-key="6">6</button>
+    <button type="button" class="lock-key" data-key="7">7</button>
+    <button type="button" class="lock-key" data-key="8">8</button>
+    <button type="button" class="lock-key" data-key="9">9</button>
+    <span class="lock-key spacer" aria-hidden="true"></span>
+    <button type="button" class="lock-key" data-key="0">0</button>
+    <button type="button" class="lock-key backspace" aria-label="Delete" data-key="back">⌫</button>
+  </div>
+  <p class="lock-error" id="lock-error"></p>
+</div>
+<div class="app-shell hidden">
+  <header class="topbar">
+    <h1>Mayaman na ba ko?</h1>
+    <p class="date-line" id="date-line"></p>
+  </header>
+  <main class="main-area">
+    <section id="view-dashboard" class="view active" aria-label="Dashboard"></section>
+    <section id="view-activity" class="view" aria-label="Activity"></section>
+    <section id="view-accounts" class="view" aria-label="Accounts"></section>
+    <section id="view-schedules" class="view" aria-label="Schedules"></section>
+    <section id="view-amortization" class="view" aria-label="Amortization"></section>
+    <section id="view-reports" class="view" aria-label="Reports"></section>
+    <section id="view-settings" class="view" aria-label="Settings"></section>
+  </main>
+  <button class="fab" type="button" id="fab-add" aria-label="Add transaction"><i data-lucide="plus"></i></button>
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="active" type="button" data-view="dashboard"><i data-lucide="home"></i><span>Home</span></button>
+    <button type="button" data-view="activity"><i data-lucide="receipt"></i><span>Activity</span></button>
+    <button type="button" data-view="accounts"><i data-lucide="wallet-cards"></i><span>Accounts</span></button>
+    <button type="button" data-view="schedules"><i data-lucide="repeat"></i><span>Schedules</span></button>
+    <button type="button" data-view="amortization"><i data-lucide="landmark"></i><span>Amortization</span></button>
+    <button type="button" data-view="reports"><i data-lucide="bar-chart-2"></i><span>Reports</span></button>
+    <button type="button" data-view="settings"><i data-lucide="settings-2"></i><span>Settings</span></button>
+  </nav>
+</div>
+<div id="sheet-overlay" class="sheet-overlay hidden">
+  <section class="sheet" id="sheet-content" aria-label="Form panel"></section>
+</div>
+<div id="dialog-overlay" class="dialog-backdrop hidden">
+  <section class="dialog" id="dialog-content" role="dialog" aria-modal="true"></section>
+</div>
+<input type="file" id="import-file-input" accept="application/json" class="hidden">
+<script>
+
+  const DEFAULT_PASSCODE = '9642';
+  const DEFAULT_APP_NAME = 'Mayaman na ba ko?';
+  let enteredPasscode = '';
+  function pressLockKey(d){
+    if(enteredPasscode.length>=4)return;
+    enteredPasscode+=d;
+    updateLockDots();
+    if(enteredPasscode.length===4)setTimeout(checkPasscode,150);
+  }
+  function pressLockBackspace(){
+    if(!enteredPasscode.length)return;
+    enteredPasscode=enteredPasscode.slice(0,-1);
+    updateLockDots();
+  }
+  function updateLockDots(){
+    document.querySelectorAll('.lock-dot').forEach((d,i)=>d.classList.toggle('filled',i<enteredPasscode.length));
+  }
+  function checkPasscode(){
+    if(enteredPasscode===(state.passcode||DEFAULT_PASSCODE)){
+      unlockApp();
+    }else{
+      const lockScreen=document.getElementById('lock-screen'), err=document.getElementById('lock-error');
+      lockScreen.classList.add('shake');
+      if(err)err.textContent='Incorrect passcode';
+      setTimeout(()=>{
+        lockScreen.classList.remove('shake');
+        enteredPasscode='';
+        updateLockDots();
+      },400);
+    }
+  }
+  function unlockApp(){
+    document.getElementById('lock-screen').classList.add('hidden');
+    document.querySelector('.app-shell').classList.remove('hidden');
+  }
+  const STORAGE_KEY = 'money_tracker_state';
+  const expenseDefaults = ['Groceries','Dates','Transport','Shopping','Bills & Utilities','Socials','Health','Rent','Subscriptions','Hobbies','Insurance','Other','Travel','Pet','Lialto'];
+  const incomeDefaults = ['Payroll','Interest','Credit','Other','Marf House'];
+  const bankDefaults = ['BPI','UnionBank','Maya','GCash','CIMB','Tonik','GoTyme','Maribank'];
+  const palette = ['#007aff','#34c759','#ff9500','#ff3b30','#af52de','#5ac8fa','#ffcc00','#ff2d55','#5856d6','#00c7be'];
+  const colorTagDefaults = {'#007aff':'Personal','#34c759':'Payroll','#ff9500':'Lialto','#ff3b30':'Emergency Fund','#af52de':'Credit Card','#5ac8fa':'N/A','#ffcc00':'Future Investments','#ff2d55':'N/A','#5856d6':'N/A','#00c7be':'Travel'};
+  const paletteNames = {'#007aff':'Blue','#34c759':'Green','#ff9500':'Orange','#ff3b30':'Red','#af52de':'Purple','#5ac8fa':'Sky Blue','#ffcc00':'Yellow','#ff2d55':'Pink','#5856d6':'Indigo','#00c7be':'Teal'};
+  function colorTagLabel(color){return `${paletteNames[color]||'Color'} - ${(state?.colorTags||colorTagDefaults)[color]||'Unassigned'}`}
+  let state = freshState(), ready = false;
+  let activityMonth = today().slice(0,7), reportsMonth = today().slice(0,7), filterType = 'all', filterAccount = 'all';
+  let pendingAction = null;
+  let dashboardTab = 'categories', accountsTab = 'bank', schedulesTab = 'payments', settingsTab = 'admin';
+  function freshState(){ return {accounts:[],transactions:[],recurring:[],recurringTransfers:[],amortizations:[],expenseCategories:[...expenseDefaults],incomeCategories:[...incomeDefaults],banks:[...bankDefaults],tags:[...new Set(Object.values(colorTagDefaults))],colorTags:{...colorTagDefaults},passcode:DEFAULT_PASSCODE,appName:DEFAULT_APP_NAME}; }
+  function normalise(data){
+    const base = freshState(), next = {...base,...data};
+    ['expenseCategories','incomeCategories','banks','tags','accounts','transactions','recurring','recurringTransfers','amortizations'].forEach(k=>{if(!Array.isArray(next[k]))next[k]=base[k]});
+    next.colorTags={...colorTagDefaults,...(next.colorTags&&typeof next.colorTags==='object'?next.colorTags:{})};
+    next.passcode=(typeof next.passcode==='string'&&/^\d{4}$/.test(next.passcode))?next.passcode:DEFAULT_PASSCODE;
+    next.appName=(typeof next.appName==='string'&&next.appName.trim())?next.appName.trim():DEFAULT_APP_NAME;
+    next.accounts=next.accounts.map(a=>({...a,tags:Array.isArray(a.tags)?a.tags:(typeof a.tags==='string'?a.tags.split(',').map(t=>t.trim()).filter(Boolean):[])}));
+    next.accounts.forEach(a=>a.tags.forEach(t=>{if(!next.tags.includes(t))next.tags.push(t)}));
+    next.amortizations=next.amortizations.map(m=>({...m,linkedAccountIds:Array.isArray(m.linkedAccountIds)?m.linkedAccountIds:[]}));
+    return next;
+  }
+  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+  function localDateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+  function today(){return localDateStr(new Date())}
+  function money(n){return (n<0?'-':'')+'<span style="font-family:system-ui,Arial,sans-serif">₱</span>'+Math.abs(Number(n||0)).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}
+  function monthLabel(key){return new Date(key+'-02T00:00:00').toLocaleDateString('en-PH',{month:'long',year:'numeric'})}
+  function shiftMonth(key,n){let [y,m]=key.split('-').map(Number);m+=n;if(m<1){m=12;y--}if(m>12){m=1;y++}return y+'-'+String(m).padStart(2,'0')}
+  function categoryColor(c){let list=[...state.expenseCategories,...state.incomeCategories];return palette[Math.max(0,list.indexOf(c))%palette.length]}
+
+  function saveState(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }catch(e){
+      toast('Could not save locally — your browser storage may be full.');
+    }
+  }
+  function loadState(){
+    try{
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if(saved){
+        const parsed = JSON.parse(saved);
+        if(parsed && typeof parsed === 'object') state = normalise(parsed);
+      }
+    }catch(e){
+      toast('Your saved data could not be read.');
+    }
+    ready = true;
+  }
+  function downloadBackup(){
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mayaman-backup-' + today() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+  function triggerImport(){ document.getElementById('import-file-input').click(); }
+  function handleImportFile(event){
+    const file = event.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const parsed = JSON.parse(reader.result);
+        confirmAction('Import this backup? It will replace all data currently in the app.', () => {
+          state = normalise(parsed);
+          applyAppName(state.appName);
+          saveState();
+          render();
+          toast('Backup imported.');
+        });
+      }catch(e){
+        toast('That file could not be read as a valid backup.');
+      }
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  function balances(){
+    let b={}; state.accounts.forEach(a=>b[a.id]=Number(a.startingBalance)||0);
+    [...state.transactions].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{
+      const a=state.accounts.find(x=>x.id===t.accountId); if(!a)return;
+      if(t.type==='expense')b[a.id]+=a.type==='credit'?t.amount:-t.amount;
+      if(t.type==='income')b[a.id]+=a.type==='credit'?-t.amount:t.amount;
+      if(t.type==='interest')b[a.id]+=t.amount;
+      if(t.type==='payment'){b[a.id]+=a.type==='credit'?-t.amount:t.amount;if(t.fromAccountId in b)b[t.fromAccountId]-=t.amount+(t.fee||0)}
+    }); return b;
+  }
+  function applyAutoRecurring(){
+    let changed=false; const todayDate=new Date(today()+'T00:00:00');
+    state.recurring.filter(r=>r.mode==='auto'&&r.active!==false&&r.startDate&&r.accountId).forEach(r=>{
+      const start=new Date(r.startDate+'T00:00:00'); if(Number.isNaN(start.getTime()))return;
+      const step=r.frequency==='Weekly'?7:r.frequency==='Quarterly'?91:r.frequency==='Annual'?365:30; let due=new Date(start);
+      while(due<=todayDate){const dueDate=localDateStr(due);if(!state.transactions.some(t=>t.recurringId===r.id&&t.dueDate===dueDate)&&!(r.skippedDates||[]).includes(dueDate)){state.transactions.push({id:uid(),type:'expense',amount:Number(r.amount)||0,category:r.category,accountId:r.accountId,fromAccountId:null,fee:0,date:dueDate,dueDate,recurringId:r.id,note:r.name,createdAt:Date.now()});changed=true}due.setDate(due.getDate()+step)}
+    }); if(changed)saveState();
+  }
+  function applyAutoRecurringTransfers(){
+    let changed=false; const todayDate=new Date(today()+'T00:00:00');
+    state.recurringTransfers.filter(r=>r.mode==='auto'&&r.active!==false&&r.startDate&&r.fromAccountId&&r.toAccountId).forEach(r=>{
+      const start=new Date(r.startDate+'T00:00:00'); if(Number.isNaN(start.getTime()))return;
+      const step=r.frequency==='Weekly'?7:r.frequency==='Quarterly'?91:r.frequency==='Annual'?365:30; let due=new Date(start);
+      while(due<=todayDate){const dueDate=localDateStr(due);if(!state.transactions.some(t=>t.recurringTransferId===r.id&&t.dueDate===dueDate)&&!(r.skippedDates||[]).includes(dueDate)){state.transactions.push({id:uid(),type:'payment',amount:Number(r.amount)||0,category:'Payment / Transfer',accountId:r.toAccountId,fromAccountId:r.fromAccountId,fee:Number(r.fee)||0,date:dueDate,dueDate,recurringTransferId:r.id,note:r.name,createdAt:Date.now()});changed=true}due.setDate(due.getDate()+step)}
+    }); if(changed)saveState();
+  }
+  function render(){
+    applyAutoRecurring();
+    applyAutoRecurringTransfers();
+    document.getElementById('date-line').textContent=new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric'});
+    const b=balances(); renderDashboard(b); renderActivity(); renderAccounts(b); renderSchedules(); renderAmortization(b); renderReports(); renderSettings(); if(window.lucide)lucide.createIcons();
+  }
+  function switchView(name){
+    document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+name));
+    document.querySelectorAll('.bottom-nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===name)); render();
+  }
+  document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>switchView(b.dataset.view));
+  document.querySelectorAll('.lock-key[data-key]').forEach(b=>{
+    b.onclick=()=>{ b.dataset.key==='back' ? pressLockBackspace() : pressLockKey(b.dataset.key); };
+  });
+  document.getElementById('fab-add').onclick=()=>openTransaction();
+  document.getElementById('sheet-overlay').onclick=(e)=>{ if(e.target.id==='sheet-overlay')closeSheet(); };
+  document.getElementById('import-file-input').onchange=(e)=>handleImportFile(e);
+  function accountRow(a,b){
+    const value=a.type==='credit'?-(b[a.id]??0):(b[a.id]??0);
+    return `<div class="row" data-account-id="${a.id}" role="button" tabindex="0" aria-label="${esc(a.name)}. Tap to view details." style="width:100%;border:0;background:transparent;text-align:left;cursor:pointer" onclick="openAccountDetail('${a.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAccountDetail('${a.id}')}"><div><div class="name">${esc(a.name)}</div><div class="meta">${esc(a.bank||'No bank')} · ${esc(a.type)} · ${esc((state.colorTags||colorTagDefaults)[a.color]||'Unassigned')}</div></div><div class="amount ${value<0?'negative':'positive'}">${money(value)}</div></div>`;
+  }
+  function orderedAccounts(list){return [...list].sort((a,b)=>(a.color||'').localeCompare(b.color||''))}
+  function groupedAccountsBody(list,b){
+    if(!list.length) return '<div class="section"><div class="empty">None yet.</div></div>';
+    const groups={}, order=[], groupColor={};
+    orderedAccounts(list).forEach(a=>{
+      const tag=(a.tags&&a.tags[0])||(state.colorTags||colorTagDefaults)[a.color]||'Unassigned';
+      if(!groups[tag]){groups[tag]=[];order.push(tag);groupColor[tag]=a.color||palette[0]}
+      groups[tag].push(a);
+    });
+    return order.map(tag=>`<div class="section"><h2 class="section-title" style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:${groupColor[tag]};flex:none"></span>${esc(tag)}</h2>${groups[tag].map(a=>accountRow(a,b)).join('')}</div>`).join('');
+  }
+  function txnRow(t){
+    const a=state.accounts.find(x=>x.id===t.accountId),sign=t.type==='expense'?'-':t.type==='income'?'+':'',cls=t.type==='expense'?'negative':t.type==='income'?'positive':'';
+    return `<button class="row" style="width:100%;border-left:0;border-right:0;background:transparent;text-align:left" onclick="openTransaction('${t.id}')"><div style="display:flex;min-width:0;align-items:center"><span style="width:9px;height:9px;border-radius:50%;background:${categoryColor(t.category)};flex:none;margin-right:12px"></span><div style="min-width:0"><div class="name" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.note||t.category)}</div><div class="meta">${esc(a?a.name:'Deleted account')} · ${esc(t.category)}</div></div></div><div class="amount ${cls}">${sign}${money(t.amount)}</div></button>`;
+  }
+  function lastCompletedDate(r){
+    let last=r.lastPaidDate||null;
+    state.transactions.filter(t=>t.recurringId===r.id).forEach(t=>{const d=t.dueDate||t.date;if(!last||d>last)last=d});
+    return last;
+  }
+  function nextRecurringOccurrence(r){
+    const start=new Date(r.startDate+'T00:00:00'); if(Number.isNaN(start.getTime()))return null;
+    const step=r.frequency==='Weekly'?7:r.frequency==='Quarterly'?91:r.frequency==='Annual'?365:30; let due=new Date(start);
+    const last=lastCompletedDate(r);
+    if(last){const lastDate=new Date(last+'T00:00:00');while(due<=lastDate)due.setDate(due.getDate()+step)}
+    return due;
+  }
+  function transferLastCompletedDate(r){
+    let last=r.lastPaidDate||null;
+    state.transactions.filter(t=>t.recurringTransferId===r.id).forEach(t=>{const d=t.dueDate||t.date;if(!last||d>last)last=d});
+    return last;
+  }
+  function nextRecurringTransferOccurrence(r){
+    const start=new Date(r.startDate+'T00:00:00'); if(Number.isNaN(start.getTime()))return null;
+    const step=r.frequency==='Weekly'?7:r.frequency==='Quarterly'?91:r.frequency==='Annual'?365:30; let due=new Date(start);
+    const last=transferLastCompletedDate(r);
+    if(last){const lastDate=new Date(last+'T00:00:00');while(due<=lastDate)due.setDate(due.getDate()+step)}
+    return due;
+  }
+  function nextCreditCardDue(a){
+    const now=new Date(); now.setHours(0,0,0,0);
+    let due=new Date(now.getFullYear(),now.getMonth(),Number(a.paymentDeadline));
+    const lastPaid=a.lastPaymentPaidDate?new Date(a.lastPaymentPaidDate+'T00:00:00'):null;
+    while(due<now||(lastPaid&&due<=lastPaid)){
+      due=new Date(due.getFullYear(),due.getMonth()+1,Number(a.paymentDeadline));
+    }
+    return due;
+  }
+  function reminderItems(){
+    const now=new Date(); now.setHours(0,0,0,0);
+    const end=new Date(now); end.setDate(end.getDate()+30);
+    const items=[];
+    const b=balances();
+    state.accounts.filter(a=>a.type==='credit'&&Number(a.paymentDeadline)>=1).forEach(a=>{
+      const due=nextCreditCardDue(a);
+      const owed=Number(b[a.id])||0;
+      if(due<=end)items.push({kind:'creditcard',date:due,label:a.name+' payment',amount:owed,accountId:a.id,overdue:false,bank:a.bank||''});
+    });
+    state.recurring.filter(r=>r.active!==false&&r.startDate).forEach(r=>{
+      const due=nextRecurringOccurrence(r); if(!due)return;
+      const overdue=due<now;
+      const acct=r.accountId?state.accounts.find(a=>a.id===r.accountId):null;
+      if(due<=end)items.push({kind:'payment',date:due,label:r.name,frequency:r.frequency||'Monthly',accountName:acct?acct.name:'',amount:r.amount,recurringId:r.id,mode:r.mode||'manual',overdue});
+    });
+    state.recurringTransfers.filter(r=>r.active!==false&&r.startDate).forEach(r=>{
+      const due=nextRecurringTransferOccurrence(r); if(!due)return;
+      const overdue=due<now;
+      const toAcct=r.toAccountId?state.accounts.find(a=>a.id===r.toAccountId):null;
+      if(due<=end)items.push({kind:'transfer',date:due,label:r.name,frequency:r.frequency||'Monthly',toAccountName:toAcct?toAcct.name:'',amount:r.amount,recurringTransferId:r.id,mode:r.mode||'manual',overdue});
+    });
+    return items.sort((a,b)=>a.date-b.date);
+  }
+  function scheduleRow(r,section){
+    const overdue=!!r.overdue;
+    const dateText=(overdue?'OVERDUE · ':'')+r.date.toLocaleDateString('en-PH',{month:'short',day:'numeric'});
+    const actionWord=r.kind==='transfer'?'move':'pay';
+    const rightTop=section==='required'?`${dateText} - tap to ${actionWord}`:dateText;
+    const amountText=r.kind==='creditcard'?money(r.amount):(!r.amount?'Varies':money(r.amount));
+    const clickAction=r.kind==='creditcard'?`openCreditCardPaymentReminder('${r.accountId}')`:r.kind==='transfer'?`${r.mode==='manual'?'openManualTransferReminder':'openRecurringTransfer'}('${r.recurringTransferId}')`:`${r.mode==='manual'?'openManualReminder':'openRecurring'}('${r.recurringId}')`;
+    let detail='';
+    if(r.kind==='creditcard'){ detail=r.bank||''; }
+    else if(r.kind==='transfer'){ detail=(r.frequency||'Monthly')+(r.toAccountName?(' - '+r.toAccountName):''); }
+    else { detail=(r.frequency||'Monthly')+(r.accountName?(' - '+r.accountName):''); }
+    return `<button class="row schedule-row" style="width:100%;border-left:0;border-right:0;background:transparent;text-align:left" onclick="${clickAction}"><div><div class="name">${esc(r.label)}</div>${detail?`<div class="meta">${esc(detail)}</div>`:''}</div><div class="schedule-right"><div class="sched-date">${rightTop}</div><div class="sched-amount">${amountText}</div></div></button>`;
+  }
+  function switchDashboardTab(tab){
+    dashboardTab=tab;
+    renderDashboard(balances());
+    if(window.lucide)lucide.createIcons();
+  }
+  function requiredPaymentsBody(){
+    const items=reminderItems().filter(r=>r.kind==='creditcard'||r.mode!=='auto');
+    return items.length?items.map(r=>scheduleRow(r,'required')).join(''):'<div class="empty">No credit card deadlines or manual payments/transfers due in the next 30 days.</div>';
+  }
+  function autoDeductsBody(){
+    const items=reminderItems().filter(r=>r.kind!=='creditcard'&&r.mode==='auto');
+    return items.length?items.map(r=>scheduleRow(r,'auto')).join(''):'<div class="empty">No auto-deduct payments or transfers due in the next 30 days.</div>';
+  }
+  function openManualReminder(id){
+    const r=state.recurring.find(x=>x.id===id); if(!r)return;
+    pendingAction=null;
+    document.getElementById('dialog-content').innerHTML=`<p class="dialog-title">${esc(r.name)}</p><p class="dialog-body">Confirm the amount and account. This only affects this payment — it won't change the defaults for future payments.</p><div class="field"><label for="manual-payment-amount">Amount</label><input class="input" id="manual-payment-amount" type="number" step=".01" value="${r.amount||''}" placeholder="Enter amount"></div><div class="field"><label for="manual-payment-account">Pay From</label><select class="input" id="manual-payment-account">${state.accounts.map(a=>`<option value="${a.id}" ${a.id===r.accountId?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="button-row"><button class="btn btn-secondary" onclick="closeDialog();openRecurring('${id}')">Edit</button><button class="btn btn-primary" onclick="markRecurringPaidFromDialog('${id}')">Mark as Paid</button></div><button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeDialog()">Cancel</button>`;
+    document.getElementById('dialog-overlay').classList.remove('hidden');
+  }
+  function markRecurringPaidFromDialog(id){
+    const accountId=document.getElementById('manual-payment-account')?.value;
+    const amount=document.getElementById('manual-payment-amount')?.value;
+    closeDialog();
+    markRecurringPaid(id,accountId,amount);
+  }
+  function openCreditCardPaymentReminder(accountId){
+    const a=state.accounts.find(x=>x.id===accountId); if(!a)return;
+    pendingAction=null;
+    const owed=Number(balances()[accountId])||0;
+    document.getElementById('dialog-content').innerHTML=`<p class="dialog-title">${esc(a.name)} payment</p><p class="dialog-body">Confirm the amount and the account to pay from.</p><div class="field"><label for="cc-payment-amount">Amount</label><input class="input" id="cc-payment-amount" type="number" step=".01" value="${owed>0?owed.toFixed(2):''}" placeholder="Enter amount"></div><div class="field"><label for="cc-payment-account">Pay From</label><select class="input" id="cc-payment-account">${state.accounts.filter(x=>x.id!==accountId).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div><div class="button-row"><button class="btn btn-secondary" onclick="closeDialog();openAccount('${accountId}')">Edit Card</button><button class="btn btn-primary" onclick="markCreditCardPaidFromDialog('${accountId}')">Mark as Paid</button></div><button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeDialog()">Cancel</button>`;
+    document.getElementById('dialog-overlay').classList.remove('hidden');
+  }
+  function markCreditCardPaidFromDialog(accountId){
+    const fromAccountId=document.getElementById('cc-payment-account')?.value;
+    const amount=document.getElementById('cc-payment-amount')?.value;
+    closeDialog();
+    markCreditCardPaid(accountId,fromAccountId,amount);
+  }
+  function markCreditCardPaid(accountId,fromAccountId,amount){
+    const a=state.accounts.find(x=>x.id===accountId); if(!a)return;
+    const from=state.accounts.find(x=>x.id===fromAccountId);
+    if(!from){toast('Choose an account to pay from.');return}
+    const amt=Number(amount)||0;
+    if(!(amt>0)){toast('Enter a valid amount.');return}
+    const due=nextCreditCardDue(a), dueDate=due?localDateStr(due):today();
+    state.transactions.push({id:uid(),type:'payment',amount:amt,category:'Payment / Transfer',accountId,fromAccountId,fee:0,date:today(),dueDate,note:a.name+' payment',createdAt:Date.now()});
+    a.lastPaymentPaidDate=dueDate;
+    render();saveState();
+  }
+  function openManualTransferReminder(id){
+    const r=state.recurringTransfers.find(x=>x.id===id); if(!r)return;
+    pendingAction=null;
+    document.getElementById('dialog-content').innerHTML=`<p class="dialog-title">${esc(r.name)}</p><p class="dialog-body">Confirm the amount and accounts. This only affects this transfer — it won't change the defaults for future transfers.</p><div class="field"><label for="manual-transfer-amount">Amount</label><input class="input" id="manual-transfer-amount" type="number" step=".01" value="${r.amount||''}" placeholder="Enter amount"></div><div class="field"><label for="manual-transfer-from">From</label><select class="input" id="manual-transfer-from"><option value="">No account selected</option>${state.accounts.map(a=>`<option value="${a.id}" ${a.id===r.fromAccountId?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="field"><label for="manual-transfer-to">To</label><select class="input" id="manual-transfer-to"><option value="">No account selected</option>${state.accounts.map(a=>`<option value="${a.id}" ${a.id===r.toAccountId?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="button-row"><button class="btn btn-secondary" onclick="closeDialog();openRecurringTransfer('${id}')">Edit</button><button class="btn btn-primary" onclick="markRecurringTransferPaidFromDialog('${id}')">Mark as Complete</button></div><button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeDialog()">Cancel</button>`;
+    document.getElementById('dialog-overlay').classList.remove('hidden');
+  }
+  function markRecurringTransferPaidFromDialog(id){
+    const fromAccountId=document.getElementById('manual-transfer-from')?.value;
+    const toAccountId=document.getElementById('manual-transfer-to')?.value;
+    const amount=document.getElementById('manual-transfer-amount')?.value;
+    closeDialog();
+    markRecurringTransferPaid(id,fromAccountId,toAccountId,amount);
+  }
+  function dashboardSummaryBody(){
+    const rows=accountTagSummary(balances());
+    return rows||'<div class="empty">Add an account or card to see your summary here.</div>';
+  }
+  function dashboardTabsSection(){
+    const tabs=[['categories','Summary'],['payments','Upcoming Payments'],['auto','Auto Deducts']];
+    const nav=`<div class="tabbar">${tabs.map(([key,label])=>`<label class="tabbar-opt"><input type="radio" name="dash-tab" value="${key}" ${dashboardTab===key?'checked':''} onchange="switchDashboardTab('${key}')">${esc(label)}</label>`).join('')}</div>`;
+    const body=dashboardTab==='payments'?requiredPaymentsBody():dashboardTab==='auto'?autoDeductsBody():dashboardSummaryBody();
+    return `${nav}<div class="section">${body}</div>`;
+  }
+  function accountTagSummary(b){
+    const valueOf=a=>a.type==='credit'?-(b[a.id]||0):(b[a.id]||0);
+    const groups={};
+    state.accounts.forEach(a=>{
+      const tags=(a.tags&&a.tags.length)?a.tags:['Untagged'];
+      tags.forEach(tag=>{groups[tag]=(groups[tag]||0)+valueOf(a)});
+    });
+    return Object.entries(groups).sort((x,y)=>y[1]-x[1]).map(([tag,amount])=>`<div class="row"><span>${esc(tag)}</span><strong class="${amount<0?'negative':'positive'}">${money(amount)}</strong></div>`).join('');
+  }
+  function renderDashboard(b){
+    const el=document.getElementById('view-dashboard');
+    if(!state.accounts.length){el.innerHTML=`<div class="section"><div class="empty">${ready?'Add your first account or card to start tracking.':'Loading your saved information…'}</div><button class="btn btn-primary save-control" onclick="openAccount()">Add Account or Card</button></div>`;return}
+    const nw=state.accounts.reduce((sum,a)=>sum+(a.type==='credit'?-(b[a.id]||0):(b[a.id]||0)),0);
+    el.innerHTML=`<div class="section"><h2 class="section-title">Net Worth</h2><p class="balance ${nw<0?'negative':''}">${money(nw)}</p></div>${dashboardTabsSection()}`;
+  }
+  function dayLabel(dateStr){
+    const d=new Date(dateStr+'T00:00:00'), today0=new Date(today()+'T00:00:00');
+    const diffDays=Math.round((today0-d)/86400000);
+    if(diffDays===0) return 'Today';
+    if(diffDays===1) return 'Yesterday';
+    return d.toLocaleDateString('en-PH',{weekday:'long',month:'short',day:'numeric'});
+  }
+  function renderActivity(){
+    const all=state.transactions.filter(t=>t.date.slice(0,7)===activityMonth).filter(t=>filterType==='all'||t.type===filterType).filter(t=>filterAccount==='all'||t.accountId===filterAccount||t.fromAccountId===filterAccount).sort((a,b)=>b.date.localeCompare(a.date)||(b.createdAt||0)-(a.createdAt||0));
+    const dayGroups={}, dayOrder=[];
+    all.forEach(t=>{ if(!dayGroups[t.date]){dayGroups[t.date]=[];dayOrder.push(t.date)} dayGroups[t.date].push(t); });
+    const listHtml=dayOrder.length?dayOrder.map(date=>`<div class="section"><h2 class="section-title">${esc(dayLabel(date))}</h2>${dayGroups[date].map(txnRow).join('')}</div>`).join(''):`<div class="section"><div class="empty">No matching activity for ${monthLabel(activityMonth)}.</div></div>`;
+    document.getElementById('view-activity').innerHTML=`<div class="section"><div class="month-nav"><button onclick="activityMonth=shiftMonth(activityMonth,-1);renderActivity()">‹</button><strong>${monthLabel(activityMonth)}</strong><button onclick="activityMonth=shiftMonth(activityMonth,1);renderActivity()">›</button></div></div><div class="section"><div class="field"><label for="filter-type">Type</label><select class="input" id="filter-type" onchange="filterType=this.value;renderActivity()"><option value="all">All Types</option><option value="expense">Expense</option><option value="income">Income</option><option value="payment">Payment / Transfer</option><option value="interest">Interest</option></select></div><div class="field" style="margin:0"><label for="filter-account">Account</label><select class="input" id="filter-account" onchange="filterAccount=this.value;renderActivity()"><option value="all">All Accounts</option>${state.accounts.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select></div></div>${listHtml}`;
+    document.getElementById('filter-type').value=filterType;document.getElementById('filter-account').value=filterAccount;
+  }
+  function switchAccountsTab(tab){
+    accountsTab=tab;
+    renderAccounts(balances());
+    if(window.lucide)lucide.createIcons();
+  }
+  function renderAccounts(b){
+    const regular=state.accounts.filter(a=>['checking','savings'].includes(a.type)), deposits=state.accounts.filter(a=>a.type==='timedeposit'), cards=state.accounts.filter(a=>a.type==='credit');
+    const tabs=[['bank','Bank Accounts',regular],['credit','Credit Cards',cards],['timedeposit','Time Deposits',deposits]];
+    const nav=`<div class="tabbar">${tabs.map(([key,label])=>`<label class="tabbar-opt"><input type="radio" name="accounts-tab" value="${key}" ${accountsTab===key?'checked':''} onchange="switchAccountsTab('${key}')">${esc(label)}</label>`).join('')}</div>`;
+    const active=tabs.find(([key])=>key===accountsTab)||tabs[0], list=active[2];
+    const body=accountsTab==='bank'?groupedAccountsBody(list,b):`<div class="section">${list.length?orderedAccounts(list).map(a=>accountRow(a,b)).join(''):'<div class="empty">None yet.</div>'}</div>`;
+    document.getElementById('view-accounts').innerHTML=nav+body+`<div class="section"><button class="btn btn-primary save-control" onclick="openAccount()">Add Account or Card</button></div>`;
+  }
+  function acctLabel(id){ if(!id) return 'No account selected'; const a=state.accounts.find(x=>x.id===id); return a?a.name:'Deleted account'; }
+  function switchSchedulesTab(tab){
+    schedulesTab=tab;
+    renderSchedules();
+    if(window.lucide)lucide.createIcons();
+  }
+  function renderSchedules(){
+    const tabs=[['payments','Recurring Payments'],['transfers','Recurring Transfers']];
+    const nav=`<div class="tabbar">${tabs.map(([key,label])=>`<label class="tabbar-opt"><input type="radio" name="schedules-tab" value="${key}" ${schedulesTab===key?'checked':''} onchange="switchSchedulesTab('${key}')">${esc(label)}</label>`).join('')}</div>`;
+    const paymentsBody=`<div class="section">${state.recurring.length?state.recurring.map(r=>`<button class="row" style="width:100%;border-left:0;border-right:0;background:transparent;text-align:left" onclick="openRecurring('${r.id}')"><div><div class="name">${esc(r.name)}${r.active?'':' · Paused'}</div><div class="meta">${esc(r.category)} · ${esc(r.frequency||'Monthly')} · starts ${esc(r.startDate||'No date')}</div></div><div class="amount negative">${r.amount?money(r.amount):'Varies'}</div></button>`).join(''):'<div class="empty">No recurring payments yet.</div>'}<button class="btn btn-secondary save-control" onclick="openRecurring()">Add Recurring Payment</button></div>`;
+    const transfersBody=`<div class="section">${state.recurringTransfers.length?state.recurringTransfers.map(r=>`<button class="row" style="width:100%;border-left:0;border-right:0;background:transparent;text-align:left" onclick="openRecurringTransfer('${r.id}')"><div><div class="name">${esc(r.name)}${r.active?'':' · Paused'}</div><div class="meta">${esc(acctLabel(r.fromAccountId))} → ${esc(acctLabel(r.toAccountId))} · ${esc(r.frequency||'Monthly')} · starts ${esc(r.startDate||'No date')}</div></div><div class="amount negative">${r.amount?money(r.amount):'Varies'}</div></button>`).join(''):'<div class="empty">No recurring transfers yet.</div>'}<button class="btn btn-secondary save-control" onclick="openRecurringTransfer()">Add Recurring Transfer</button></div>`;
+    document.getElementById('view-schedules').innerHTML=nav+(schedulesTab==='transfers'?transfersBody:paymentsBody);
+  }
+  function amortizationPaidAmount(item){
+    const txnSum=state.transactions.filter(t=>t.recurringId===item.recurringId&&t.type==='expense').reduce((s,t)=>s+(Number(t.amount)||0),0);
+    return (Number(item.startingPaid)||0)+txnSum;
+  }
+  function amortizationSetAside(item,b){
+    b=b||balances();
+    return (item.linkedAccountIds||[]).reduce((s,id)=>s+(Number(b[id])||0),0);
+  }
+  function amortizationRow(item){
+    const paid=amortizationPaidAmount(item), total=Number(item.totalAmount)||0, remaining=Math.max(0,total-paid), pct=total>0?Math.min(100,paid/total*100):0;
+    const r=item.recurringId?state.recurring.find(x=>x.id===item.recurringId):null;
+    return `<button class="row" style="width:100%;border-left:0;border-right:0;background:transparent;text-align:left;flex-direction:column;align-items:stretch;gap:8px;padding-top:10px;padding-bottom:10px" onclick="openAmortizationDetail('${item.id}')"><div style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:10px"><div class="name">${esc(item.name)}</div><div class="amount negative">${money(remaining)} left</div></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${item.color||palette[0]}"></div></div><div class="meta">${money(paid)} of ${money(total)} paid${r?' · linked to '+esc(r.name):''}</div></button>`;
+  }
+  function renderAmortization(){
+    document.getElementById('view-amortization').innerHTML=`<div class="section">${state.amortizations.length?state.amortizations.map(amortizationRow).join(''):'<div class="empty">No amortizations yet.</div>'}<button class="btn btn-secondary save-control" onclick="openAmortization()">Add Amortization</button></div>`;
+  }
+  function openAmortizationDetail(id){
+    const item=state.amortizations.find(x=>x.id===id); if(!item)return;
+    const paid=amortizationPaidAmount(item), total=Number(item.totalAmount)||0, remaining=Math.max(0,total-paid), pct=total>0?Math.min(100,paid/total*100):0;
+    const r=item.recurringId?state.recurring.find(x=>x.id===item.recurringId):null;
+    const setAside=amortizationSetAside(item);
+    const linkedNames=(item.linkedAccountIds||[]).map(aid=>{const a=state.accounts.find(x=>x.id===aid);return a?esc(a.name):null}).filter(Boolean);
+    const header=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px"><h2 style="margin:0">${esc(item.name)}</h2><button type="button" class="btn btn-secondary btn-sm" aria-label="Edit amortization" onclick="openAmortization('${id}')"><i data-lucide="pencil" style="width:14px;height:14px"></i></button></div>`;
+    const body=`<div class="section"><div class="row"><span>Linked Payment</span><strong>${r?esc(r.name):'None'}</strong></div><div class="row"><span>Total Contract Amount</span><strong>${money(total)}</strong></div><div class="row"><span>Term</span><strong>${item.termMonths?item.termMonths+' months':'Not set'}</strong></div></div><div class="section" style="margin-top:14px"><div class="bar-track" style="margin-bottom:12px"><div class="bar-fill" style="width:${pct}%;background:${item.color||palette[0]}"></div></div><div class="row"><span>Paid So Far</span><strong class="positive">${money(paid)}</strong></div><div class="row"><span>Remaining Balance</span><strong class="negative">${money(remaining)}</strong></div></div>${linkedNames.length?`<div class="section" style="margin-top:14px"><div class="row"><span>Funds Set Aside</span><strong>${money(setAside)}</strong></div><div class="meta" style="margin-top:-4px">${linkedNames.join(', ')}</div></div>`:''}`;
+    openSheet(header+body+`<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">Close</button>`);
+    if(window.lucide)lucide.createIcons();
+  }
+  function openAmortization(id){
+    const item=id?state.amortizations.find(x=>x.id===id):null;
+    openSheet(`<h2>${item?'Edit Amortization':'Add Amortization'}</h2><div class="field"><label for="amort-name">Name</label><input class="input" id="amort-name" value="${esc(item?.name||'')}" placeholder="e.g. Condo Loan"></div><div class="field"><label for="amort-recurring">Linked Recurring Payment</label><select class="input" id="amort-recurring"><option value="" ${!item?.recurringId?'selected':''}>No linked payment</option>${state.recurring.map(r=>`<option value="${r.id}" ${item?.recurringId===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select></div><div class="field"><label for="amort-total">Total Contract Amount</label><input class="input" id="amort-total" type="number" step=".01" min="0" value="${item?.totalAmount||''}" placeholder="e.g. 1500000"></div><div class="field"><label for="amort-term">Term (months)</label><input class="input" id="amort-term" type="number" min="1" step="1" value="${item?.termMonths||''}" placeholder="e.g. 60"></div><div class="field"><label for="amort-starting-paid">Already Paid (before tracking)</label><input class="input" id="amort-starting-paid" type="number" step=".01" min="0" value="${item?.startingPaid||''}" placeholder="0.00"></div><div class="field"><label for="amort-color">Color</label><select class="input" id="amort-color">${palette.map(c=>`<option value="${c}" ${item?.color===c?'selected':''}>${esc(colorTagLabel(c))}</option>`).join('')}</select></div><div class="field"><label>Linked Accounts (funds set aside)</label>${state.accounts.length?state.accounts.map(a=>`<label style="display:flex;align-items:center;gap:8px;padding:6px 0"><input type="checkbox" class="amort-linked-account" value="${a.id}" ${(item?.linkedAccountIds||[]).includes(a.id)?'checked':''}> ${esc(a.name)}</label>`).join(''):'<p class="meta" style="margin:0">Add accounts first to link them here.</p>'}</div><button class="btn btn-primary save-control" style="width:100%" onclick="saveAmortization('${id||''}')">Save</button>${item?`<div class="button-row"><button class="btn btn-secondary" style="color:var(--color-negative);border-color:var(--color-negative)" onclick="confirmAction('Delete this amortization?',()=>deleteAmortization('${id}'))">Delete</button></div>`:''}<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="${item?`openAmortizationDetail('${id}')`:'closeSheet()'}">Cancel</button>`);
+  }
+  function saveAmortization(id){
+    const name=document.getElementById('amort-name').value.trim(); if(!name){toast('Enter a name.');return}
+    const linkedAccountIds=[...document.querySelectorAll('.amort-linked-account:checked')].map(el=>el.value);
+    const old=state.amortizations.find(x=>x.id===id);
+    const item={id:id||uid(),name,recurringId:document.getElementById('amort-recurring').value||null,totalAmount:Number(document.getElementById('amort-total').value)||0,termMonths:Number(document.getElementById('amort-term').value)||null,startingPaid:Number(document.getElementById('amort-starting-paid').value)||0,color:document.getElementById('amort-color').value,linkedAccountIds,order:old?.order??state.amortizations.length};
+    if(id)state.amortizations[state.amortizations.findIndex(x=>x.id===id)]=item;else state.amortizations.push(item);
+    closeSheet();render();saveState();
+  }
+  function deleteAmortization(id){state.amortizations=state.amortizations.filter(x=>x.id!==id);closeSheet();render();saveState()}
+  function smoothPath(pts){
+    if(pts.length<2) return pts.length===1?`M${pts[0][0]},${pts[0][1]}`:'';
+    let d=`M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+    for(let i=1;i<pts.length;i++){
+      const midX=(pts[i-1][0]+pts[i][0])/2, midY=(pts[i-1][1]+pts[i][1])/2;
+      d+=` Q${pts[i-1][0].toFixed(1)},${pts[i-1][1].toFixed(1)} ${midX.toFixed(1)},${midY.toFixed(1)}`;
+    }
+    const last=pts[pts.length-1];
+    d+=` L${last[0].toFixed(1)},${last[1].toFixed(1)}`;
+    return d;
+  }
+  function incomeVsSpendChart(){
+    const months=[]; for(let i=5;i>=0;i--)months.push(shiftMonth(reportsMonth,-i));
+    const incomeData=months.map(mo=>state.transactions.filter(t=>t.type==='income'&&t.date.slice(0,7)===mo).reduce((s,t)=>s+(Number(t.amount)||0),0));
+    const expenseData=months.map(mo=>state.transactions.filter(t=>t.type==='expense'&&t.date.slice(0,7)===mo).reduce((s,t)=>s+(Number(t.amount)||0),0));
+    const maxVal=Math.max(1,...incomeData,...expenseData);
+    const W=340,H=108,padL=4,padR=68,padT=16,padB=6,plotW=W-padL-padR,plotH=H-padT-padB;
+    const stepX=months.length>1?plotW/(months.length-1):0;
+    const toPt=(v,i)=>[padL+stepX*i, padT+plotH-(v/maxVal*plotH)];
+    const incomePts=incomeData.map((v,i)=>toPt(v,i));
+    const expensePts=expenseData.map((v,i)=>toPt(v,i));
+    const labels=months.map(mo=>`<span>${monthLabel(mo).slice(0,3)}</span>`).join('');
+    const incomeLine=smoothPath(incomePts);
+    const areaPath=`${incomeLine} L${incomePts[incomePts.length-1][0].toFixed(1)},${H} L${incomePts[0][0].toFixed(1)},${H} Z`;
+    const lastIdx=incomePts.length-1, lastPt=incomePts[lastIdx], lastVal=incomeData[lastIdx];
+    const lastExpPt=expensePts[expensePts.length-1], lastExpVal=expenseData[expenseData.length-1];
+    const bubbleW=62;
+    const incomeBubbleY=Math.min(Math.max(lastPt[1]-9,0),H-20);
+    const expBubbleY=Math.min(Math.max(lastExpPt[1]-9,0),H-20);
+    return `<div class="chart-legend"><span><span class="chart-dot" style="background:var(--color-accent)"></span>Income</span><span><span class="chart-dot" style="background:var(--color-negative)"></span>Expenses</span></div><svg class="income-spend-chart" viewBox="0 0 ${W} ${H}" width="100%" style="color:var(--color-text);aspect-ratio:${W}/${H};display:block"><defs><linearGradient id="incomeFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.22"></stop><stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0"></stop></linearGradient></defs><path d="${areaPath}" fill="url(#incomeFill)" stroke="none"></path><path d="${smoothPath(expensePts)}" fill="none" stroke="var(--color-negative)" stroke-width="2.5" stroke-linecap="round"></path><path d="${incomeLine}" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round"></path><circle cx="${lastPt[0].toFixed(1)}" cy="${lastPt[1].toFixed(1)}" r="3.5" fill="var(--color-accent)" stroke="#fff" stroke-width="1.5"></circle><circle cx="${lastExpPt[0].toFixed(1)}" cy="${lastExpPt[1].toFixed(1)}" r="3.5" fill="var(--color-negative)" stroke="#fff" stroke-width="1.5"></circle><foreignObject x="${(lastExpPt[0]+7).toFixed(1)}" y="${expBubbleY.toFixed(1)}" width="${bubbleW}" height="18"><div xmlns="http://www.w3.org/1999/xhtml" style="background:var(--color-negative);color:#fff;font-size:9.5px;font-weight:700;border-radius:8px;padding:2px 6px;text-align:center;white-space:nowrap;font-family:var(--font-body)">${money(lastExpVal)}</div></foreignObject><foreignObject x="${(lastPt[0]+7).toFixed(1)}" y="${incomeBubbleY.toFixed(1)}" width="${bubbleW}" height="18"><div xmlns="http://www.w3.org/1999/xhtml" style="background:var(--color-accent);color:#fff;font-size:9.5px;font-weight:700;border-radius:8px;padding:2px 6px;text-align:center;white-space:nowrap;font-family:var(--font-body)">${money(lastVal)}</div></foreignObject></svg><div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent);padding-right:64px">${labels}</div>`;
+  }
+  function renderReports(){
+    const ex=state.transactions.filter(t=>t.type==='expense'&&t.date.slice(0,7)===reportsMonth), tot={}, income=state.transactions.filter(t=>t.type==='income'&&t.date.slice(0,7)===reportsMonth).reduce((s,t)=>s+t.amount,0);
+    ex.forEach(t=>tot[t.category]=(tot[t.category]||0)+t.amount);const sum=Object.values(tot).reduce((s,n)=>s+n,0);
+    document.getElementById('view-reports').innerHTML=`<div class="section"><div class="month-nav"><button onclick="reportsMonth=shiftMonth(reportsMonth,-1);renderReports()">‹</button><strong>${monthLabel(reportsMonth)}</strong><button onclick="reportsMonth=shiftMonth(reportsMonth,1);renderReports()">›</button></div></div><div class="section"><h2 class="section-title">Spending by Category</h2>${Object.entries(tot).length?Object.entries(tot).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`<div class="bar-row"><div class="bar-label"><span>${esc(c)}</span><strong>${money(n)}</strong></div><div class="bar-track"><div class="bar-fill" style="width:${sum?n/sum*100:0}%"></div></div></div>`).join(''):'<div class="empty">No expenses logged this month.</div>'}</div><div class="section"><h2 class="section-title">Monthly Summary</h2><div class="row"><span>Total Spent</span><strong class="negative">${money(sum)}</strong></div><div class="row"><span>Total Income</span><strong class="positive">${money(income)}</strong></div></div><div class="section"><h2 class="section-title">Income vs Spend · Last 6 Months</h2>${incomeVsSpendChart()}</div>`;
+  }
+  function settingRows(items,type){return items.map(v=>`<div class="settings-row"><span class="name">${esc(v)}</span><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm" onclick="renameSetting('${type}','${esc(v)}')">Edit</button><button class="btn btn-ghost btn-sm" style="color:var(--color-accent-700)" onclick="removeSetting('${type}','${esc(v)}')">Remove</button></div></div>`).join('')}
+  function switchSettingsTab(tab){
+    settingsTab=tab;
+    renderSettings();
+    if(window.lucide)lucide.createIcons();
+  }
+  function settingsAdminBody(){
+    return `<div class="section"><h2 class="section-title">Backup</h2><p class="meta" style="margin:0 0 12px">Your data lives only on this device. Export a backup regularly, especially before clearing browser data or switching phones.</p><button class="btn btn-primary save-control" onclick="downloadBackup()">Export Backup</button><button class="btn btn-secondary save-control" onclick="triggerImport()">Import Backup</button></div><div class="section"><h2 class="section-title">Passcode</h2><p class="meta" style="margin:0 0 12px">Protects this app with a 4-digit passcode when it opens.</p><button class="btn btn-secondary save-control" onclick="openChangePasscode()">Change Passcode</button></div><div class="section"><h2 class="section-title">App Name</h2><p class="meta" style="margin:0 0 12px">Currently: ${esc(state.appName)}</p><button class="btn btn-secondary save-control" onclick="renameApp()">Change App Name</button></div><div class="section"><h2 class="section-title">Danger Zone</h2><button class="btn btn-secondary save-control" style="color:var(--color-negative);border-color:var(--color-negative)" onclick="confirmAction('Reset all data? This cannot be undone.',resetAll)">Reset All Data</button></div>`;
+  }
+  function settingsCategoriesBody(){
+    return `<div class="section"><h2 class="section-title">Expense Categories</h2>${settingRows(state.expenseCategories,'expenseCategories')}<button class="btn btn-secondary save-control" onclick="addSetting('expenseCategories','New expense category name')">Add Expense Category</button></div><div class="section"><h2 class="section-title">Income Categories</h2>${settingRows(state.incomeCategories,'incomeCategories')}<button class="btn btn-secondary save-control" onclick="addSetting('incomeCategories','New income category name')">Add Income Category</button></div>`;
+  }
+  function settingsBanksBody(){
+    return `<div class="section"><h2 class="section-title">Banks</h2>${settingRows(state.banks,'banks')}<button class="btn btn-secondary save-control" onclick="addSetting('banks','New bank name')">Add Bank</button></div>`;
+  }
+  function settingsTagsBody(){
+    return `<div class="section"><h2 class="section-title">Color Tags</h2>${palette.map(c=>`<div class="settings-row"><span class="name" style="display:flex;align-items:center;gap:8px"><span class="swatch" style="background:${c}"></span>${esc(colorTagLabel(c))}</span><button class="btn btn-secondary btn-sm" onclick="renameColorTag('${c}')">Edit</button></div>`).join('')}</div>`;
+  }
+  function renderSettings(){
+    const tabs=[['admin','Admin'],['categories','Categories'],['banks','Banks'],['tags','Tags']];
+    const nav=`<div class="tabbar">${tabs.map(([key,label])=>`<label class="tabbar-opt"><input type="radio" name="settings-tab" value="${key}" ${settingsTab===key?'checked':''} onchange="switchSettingsTab('${key}')">${esc(label)}</label>`).join('')}</div>`;
+    const body=settingsTab==='categories'?settingsCategoriesBody():settingsTab==='banks'?settingsBanksBody():settingsTab==='tags'?settingsTagsBody():settingsAdminBody();
+    document.getElementById('view-settings').innerHTML=nav+body;
+  }
+  function openSheet(html){document.getElementById('sheet-content').innerHTML=html;document.getElementById('sheet-overlay').classList.remove('hidden')}
+  function closeSheet(){document.getElementById('sheet-overlay').classList.add('hidden')}
+  function openTransaction(id){
+    if(!state.accounts.length){toast('Add an account first.');return}
+    const t=id?state.transactions.find(x=>x.id===id):null, type=t?.type||'expense';
+    openSheet(`<h2>${t?'Edit Transaction':'Add Transaction'}</h2><div class="field"><label>Type</label><div class="seg" id="type-seg">${['expense','income','payment'].map(x=>`<label class="seg-opt"><input type="radio" name="txn-type-radio" value="${x}" ${x===type?'checked':''} onchange="setTransactionType('${x}')">${x==='expense'?'Expense':x==='income'?'Income':'Payment'}</label>`).join('')}</div></div><div class="field"><label for="txn-amount">Amount</label><input class="input" id="txn-amount" type="number" min="0" step=".01" value="${t?.amount||''}"></div><div class="field" id="category-field"><label for="txn-category">Category</label><select class="input" id="txn-category"></select></div><div class="field"><label for="txn-account">Account / Card</label><select class="input" id="txn-account">${state.accounts.map(a=>`<option value="${a.id}" ${t?.accountId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="field hidden" id="from-field"><label for="txn-from">Pay From</label><select class="input" id="txn-from">${state.accounts.map(a=>`<option value="${a.id}" ${t?.fromAccountId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="field hidden" id="fee-field"><label for="txn-fee">Transfer Fee</label><input class="input" id="txn-fee" type="number" min="0" step=".01" value="${t?.fee||''}" placeholder="0.00"></div><div class="field"><label for="txn-date">Date</label><input class="input" id="txn-date" type="date" value="${t?.date||today()}"></div><div class="field"><label for="txn-note">Note</label><input class="input" id="txn-note" value="${esc(t?.note||'')}" placeholder="Optional note"></div><button class="btn btn-primary save-control" style="width:100%" onclick="saveTransaction('${id||''}')">Save</button>${t?`<div class="button-row"><button class="btn btn-secondary" style="color:var(--color-negative);border-color:var(--color-negative)" onclick="confirmAction('Delete this transaction?',()=>deleteTransaction('${id}'))">Delete</button></div>`:''}<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">Cancel</button>`);
+    setTransactionType(type,t?.category);
+  }
+  function setTransactionType(type,selected){
+    const payment=type==='payment';document.getElementById('category-field').classList.toggle('hidden',payment);document.getElementById('from-field').classList.toggle('hidden',!payment);document.getElementById('fee-field').classList.toggle('hidden',!payment);
+    if(!payment){const cats=type==='income'?state.incomeCategories:state.expenseCategories;document.getElementById('txn-category').innerHTML=cats.map(c=>`<option ${c===selected?'selected':''}>${esc(c)}</option>`).join('')}
+  }
+  function saveTransaction(id){
+    const type=document.querySelector('input[name="txn-type-radio"]:checked').value,amount=Number(document.getElementById('txn-amount').value);if(!(amount>0)){toast('Enter a valid amount.');return}
+    const old=state.transactions.find(x=>x.id===id), txn={id:id||uid(),type,amount,category:type==='payment'?'Payment / Transfer':document.getElementById('txn-category').value,accountId:document.getElementById('txn-account').value,fromAccountId:type==='payment'?document.getElementById('txn-from').value:null,fee:type==='payment'?(Number(document.getElementById('txn-fee').value)||0):0,date:document.getElementById('txn-date').value||today(),note:document.getElementById('txn-note').value.trim(),createdAt:old?.createdAt||Date.now()};
+    if(id)state.transactions[state.transactions.findIndex(x=>x.id===id)]=txn;else state.transactions.push(txn);closeSheet();render();saveState();
+  }
+  function deleteTransaction(id){
+    const t=state.transactions.find(x=>x.id===id);
+    if(t&&t.recurringId&&t.dueDate){const r=state.recurring.find(x=>x.id===t.recurringId);if(r){r.skippedDates=r.skippedDates||[];if(!r.skippedDates.includes(t.dueDate))r.skippedDates.push(t.dueDate)}}
+    if(t&&t.recurringTransferId&&t.dueDate){const r=state.recurringTransfers.find(x=>x.id===t.recurringTransferId);if(r){r.skippedDates=r.skippedDates||[];if(!r.skippedDates.includes(t.dueDate))r.skippedDates.push(t.dueDate)}}
+    state.transactions=state.transactions.filter(x=>x.id!==id);closeSheet();render();saveState();
+  }
+  function openAccount(id){
+    const a=id?state.accounts.find(x=>x.id===id):null,type=a?.type||'checking';
+    openSheet(`<h2>${a?'Edit Account':'Add Account or Card'}</h2><div class="field"><label for="acct-type">Type</label><select class="input" id="acct-type" onchange="['deadline-field','cvv-field','expiry-field','limit-field'].forEach(id=>document.getElementById(id).classList.toggle('hidden',this.value!=='credit'))"><option value="checking">Checking</option><option value="savings">Savings</option><option value="timedeposit">Time Deposit</option><option value="credit">Credit Card</option></select></div><div class="field"><label for="acct-name">Name</label><input class="input" id="acct-name" value="${esc(a?.name||'')}" placeholder="e.g. BDO Checking"></div><div class="field"><label for="acct-bank">Bank</label><select class="input" id="acct-bank"><option value="">No bank selected</option>${state.banks.map(b=>`<option ${a?.bank===b?'selected':''}>${esc(b)}</option>`).join('')}</select></div><div class="field"><label for="acct-number">Account / Card Number</label><input class="input" id="acct-number" value="${esc(a?.accountNumber||'')}" placeholder="Optional"></div><div class="field"><label for="acct-balance">Current Balance</label><input class="input" id="acct-balance" type="number" step=".01" value="${a?.startingBalance||''}"></div><div class="field ${type==='credit'?'':'hidden'}" id="deadline-field"><label for="acct-deadline">Payment Deadline</label><input class="input" id="acct-deadline" type="number" min="1" max="31" step="1" value="${a?.paymentDeadline||''}" placeholder="Day of month (1–31)"></div><div class="field ${type==='credit'?'':'hidden'}" id="cvv-field"><label for="acct-cvv">CVV</label><input class="input" id="acct-cvv" inputmode="numeric" maxlength="4" value="${esc(a?.cvv||'')}" placeholder="3 or 4 digit security code"></div><div class="field ${type==='credit'?'':'hidden'}" id="expiry-field"><label for="acct-expiry">Card Expiry (MM/YY)</label><input class="input" id="acct-expiry" maxlength="5" value="${esc(a?.expiry||'')}" placeholder="e.g. 08/29"></div><div class="field ${type==='credit'?'':'hidden'}" id="limit-field"><label for="acct-limit">Credit Limit</label><input class="input" id="acct-limit" type="number" step=".01" min="0" value="${a?.creditLimit||''}" placeholder="e.g. 53000"></div><div class="field"><label for="acct-color">Color - Tag</label><select class="input" id="acct-color">${palette.map(c=>`<option value="${c}" ${a?.color===c?'selected':''}>${esc(colorTagLabel(c))}</option>`).join('')}</select></div><button class="btn btn-primary save-control" style="width:100%" onclick="saveAccount('${id||''}')">Save</button>${a?`<div class="button-row"><button class="btn btn-secondary" style="color:var(--color-negative);border-color:var(--color-negative)" onclick="confirmAction('Delete this account? Transactions will remain in activity.',()=>deleteAccount('${id}'))">Delete Account</button></div>`:''}<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="${a?`openAccountDetail('${id}')`:'closeSheet()'}">Cancel</button>`);
+    document.getElementById('acct-type').value=type;
+  }
+  function saveAccount(id){
+    const name=document.getElementById('acct-name').value.trim();if(!name){toast('Enter an account name.');return}
+    const old=state.accounts.find(x=>x.id===id), accountType=document.getElementById('acct-type').value, deadline=Number(document.getElementById('acct-deadline').value);
+    const color=document.getElementById('acct-color').value, mergedTag=colorTagDefaults[color]||'Unassigned';
+    colorTagDefaults[color]=mergedTag;
+    const a={...(old||{}),id:id||uid(),name,type:accountType,bank:document.getElementById('acct-bank').value,accountNumber:document.getElementById('acct-number').value.trim(),cvv:accountType==='credit'?document.getElementById('acct-cvv').value.trim():null,expiry:accountType==='credit'?document.getElementById('acct-expiry').value.trim():null,creditLimit:accountType==='credit'?(Number(document.getElementById('acct-limit').value)||null):null,startingBalance:Number(document.getElementById('acct-balance').value)||0,paymentDeadline:accountType==='credit'&&deadline>=1&&deadline<=31?deadline:null,color,order:old?.order??state.accounts.filter(x=>x.type===accountType).length,tags:[mergedTag]};
+    if(old)state.accounts[state.accounts.findIndex(x=>x.id===id)]=a;else state.accounts.push(a);closeSheet();render();saveState();
+  }
+  function deleteAccount(id){state.accounts=state.accounts.filter(x=>x.id!==id);closeSheet();render();saveState()}
+  function formatNumberGroups(num){
+    const digits=String(num||'').trim(); if(!digits) return '';
+    return digits.replace(/(.{4})/g,'$1 ').trim();
+  }
+  function jsStr(v){return String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+  function creditRingSvg(pct){
+    const p=Math.max(0,Math.min(100,pct)), r=26, c=2*Math.PI*r, offset=c*(1-p/100);
+    return `<svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="${r}" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="6"></circle><circle cx="30" cy="30" r="${r}" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" transform="rotate(-90 30 30)"></circle><text x="30" y="35" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">${Math.round(p)}%</text></svg>`;
+  }
+  function copyText(text){
+    const value=String(text||'');
+    if(!value){toast('Nothing to copy.');return}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(value).then(()=>toast('Copied to clipboard.')).catch(()=>toast('Could not copy — try copying manually.'));
+    }else{
+      try{
+        const ta=document.createElement('textarea');
+        ta.value=value; ta.style.position='fixed'; ta.style.opacity='0'; ta.style.top='0'; ta.style.left='0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        const ok=document.execCommand('copy');
+        ta.remove();
+        toast(ok?'Copied to clipboard.':'Could not copy — try copying manually.');
+      }catch(e){
+        toast('Could not copy — try copying manually.');
+      }
+    }
+  }
+  function requestRevealSensitive(id){
+    pendingAction=null;
+    document.getElementById('dialog-content').innerHTML=`<p class="dialog-title">Confirm Passcode</p><p class="dialog-body">Enter your passcode to reveal the CVV and payment deadline for this card.</p><div class="field"><label for="reveal-passcode">Passcode</label><input class="input" id="reveal-passcode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="••••"></div><div class="button-row"><button class="btn btn-secondary" onclick="closeDialog()">Cancel</button><button class="btn btn-primary" onclick="confirmRevealSensitive('${id}')">Confirm</button></div>`;
+    document.getElementById('dialog-overlay').classList.remove('hidden');
+    setTimeout(()=>document.getElementById('reveal-passcode')?.focus(),0);
+  }
+  function confirmRevealSensitive(id){
+    const entered=document.getElementById('reveal-passcode').value;
+    if(entered!==(state.passcode||DEFAULT_PASSCODE)){toast('Incorrect passcode.');return}
+    closeDialog();
+    openAccountDetail(id,true);
+  }
+  function openAccountDetail(id,revealed){
+    const a=state.accounts.find(x=>x.id===id); if(!a)return;
+    const b=balances(), value=a.type==='credit'?-(b[a.id]??0):(b[a.id]??0);
+    const tagLabel=(state.colorTags||colorTagDefaults)[a.color]||'Unassigned';
+    const typeLabel=a.type==='timedeposit'?'Time Deposit':a.type.charAt(0).toUpperCase()+a.type.slice(1);
+    const header=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px"><h2 style="margin:0">${esc(a.name)}</h2><button type="button" class="btn btn-secondary btn-sm" aria-label="Edit account" onclick="openAccount('${id}')"><i data-lucide="pencil" style="width:14px;height:14px"></i></button></div>`;
+    let body;
+    if(a.type==='credit'){
+      const numberDisplay=a.accountNumber?formatNumberGroups(a.accountNumber):'Not set';
+      const cvvDisplay=revealed?(a.cvv||'Not set'):'•••';
+      const expiryDisplay=a.expiry?esc(a.expiry):'Not set';
+      const deadlineDisplay=revealed?(a.paymentDeadline?('Day '+a.paymentDeadline+' of month'):'Not set'):'••';
+      const limit=Number(a.creditLimit)||0, owed=Math.max(0,-value), pct=limit>0?(owed/limit*100):0;
+      const ringSection=limit>0?`<div class="section credit-limit-card" style="background:${a.color||palette[0]}"><div class="credit-ring">${creditRingSvg(pct)}</div><div class="credit-limit-text"><span>Your credit limit</span><strong>${money(owed)} of ${money(limit)}</strong></div></div>`:'';
+      body=`<div class="card-visual" style="background:${a.color||palette[0]}"><div class="card-visual-top"><span class="card-visual-brand">${esc(a.bank||'Credit Card')}</span></div><div class="card-visual-number value-with-copy">${numberDisplay}${a.accountNumber?`<button type="button" class="card-copy-btn" aria-label="Copy card number" onclick="copyText('${jsStr(a.accountNumber)}')">Copy</button>`:''}</div><div class="card-visual-meta"><div><span>Card Holder</span><strong>${esc(a.name)}</strong></div><div><span>Expires</span><strong>${expiryDisplay}</strong></div><div><span>CVV</span><strong>${esc(cvvDisplay)}</strong></div></div></div>${ringSection}<div class="section" style="margin-top:14px"><div class="row"><span>Balance</span><strong class="${value<0?'negative':'positive'}">${money(value)}</strong></div><div class="row"><span>Payment Deadline</span><strong>${esc(deadlineDisplay)}</strong></div>${revealed?'':`<button class="btn btn-secondary save-control" onclick="requestRevealSensitive('${id}')">Show CVV &amp; Payment Deadline</button>`}<div class="row" style="margin-top:${revealed?'0':'10px'}"><span>Tag</span><strong>${esc(tagLabel)}</strong></div></div>`;
+    }else{
+      const numberDisplay=a.accountNumber?formatNumberGroups(a.accountNumber):'Not set';
+      body=`<div class="section"><div class="row"><span>Bank</span><strong>${esc(a.bank||'No bank')}</strong></div><div class="row"><span>Type</span><strong>${esc(typeLabel)}</strong></div><div class="row"><span>Account Number</span><span class="value-with-copy"><strong>${numberDisplay}</strong>${a.accountNumber?`<button type="button" class="copy-btn" aria-label="Copy account number" onclick="copyText('${jsStr(a.accountNumber)}')">Copy</button>`:''}</span></div><div class="row"><span>Balance</span><strong class="${value<0?'negative':'positive'}">${money(value)}</strong></div><div class="row"><span>Tag</span><strong>${esc(tagLabel)}</strong></div></div>`;
+    }
+    openSheet(header+body+`<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">Close</button>`);
+    if(window.lucide)lucide.createIcons();
+  }
+  function openRecurring(id){
+    if(!state.accounts.length){toast('Add an account first.');return}
+    const r=id?state.recurring.find(x=>x.id===id):null;
+    openSheet(`<h2>${r?'Edit Recurring Payment':'Add Recurring Payment'}</h2><div class="field"><label for="rec-name">Name</label><input class="input" id="rec-name" value="${esc(r?.name||'')}" placeholder="e.g. Spotify"></div><div class="field"><label for="rec-amount">Amount (optional)</label><input class="input" id="rec-amount" type="number" step=".01" value="${r?.amount||''}" placeholder="Leave blank if it varies"></div><div class="field"><label for="rec-category">Category</label><select class="input" id="rec-category">${state.expenseCategories.map(c=>`<option ${r?.category===c?'selected':''}>${esc(c)}</option>`).join('')}</select></div><div class="field"><label for="rec-account">Account (optional)</label><select class="input" id="rec-account"><option value="" ${!r?.accountId?'selected':''}>No account selected</option>${state.accounts.map(a=>`<option value="${a.id}" ${r?.accountId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="field"><label for="rec-frequency">Frequency</label><select class="input" id="rec-frequency"><option ${r?.frequency==='Monthly'?'selected':''}>Monthly</option><option ${r?.frequency==='Weekly'?'selected':''}>Weekly</option><option ${r?.frequency==='Quarterly'?'selected':''}>Quarterly</option><option ${r?.frequency==='Annual'?'selected':''}>Annual</option></select></div><div class="field"><label for="rec-mode">Payment Method</label><select class="input" id="rec-mode"><option value="manual" ${r?.mode!=='auto'?'selected':''}>Manual — mark as paid</option><option value="auto" ${r?.mode==='auto'?'selected':''}>Auto — deduct automatically</option></select></div><div class="field"><label for="rec-start-date">Start Date</label><input class="input" id="rec-start-date" type="date" value="${r?.startDate||today()}"></div><button class="btn btn-primary save-control" style="width:100%" onclick="saveRecurring('${id||''}')">Save</button>${r&&r.mode!=='auto'?`<button class="btn btn-secondary save-control" style="width:100%" onclick="markRecurringPaid('${id}')">Mark as Paid</button>`:''}${r?`<div class="button-row"><button class="btn btn-secondary" style="color:var(--color-negative);border-color:var(--color-negative)" onclick="confirmAction('Delete this recurring payment?',()=>deleteRecurring('${id}'))">Delete</button></div>`:''}<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">Cancel</button>`);
+  }
+  function saveRecurring(id){
+    const name=document.getElementById('rec-name').value.trim();if(!name){toast('Enter a payment name.');return}
+    const amount=Number(document.getElementById('rec-amount').value)||0;
+    const item={id:id||uid(),name,amount,category:document.getElementById('rec-category').value,accountId:document.getElementById('rec-account').value,frequency:document.getElementById('rec-frequency').value,mode:document.getElementById('rec-mode').value,startDate:document.getElementById('rec-start-date').value||today(),active:id?(state.recurring.find(x=>x.id===id)?.active??true):true};
+    if(id)state.recurring[state.recurring.findIndex(x=>x.id===id)]=item;else state.recurring.push(item);closeSheet();render();saveState();
+  }
+  function markRecurringPaid(id,accountId,amountOverride){const r=state.recurring.find(x=>x.id===id);if(!r)return;const selectedAccountId=accountId||r.accountId;const account=state.accounts.find(a=>a.id===selectedAccountId);if(!account){toast('Choose an account before marking this paid.');return}const amt=(amountOverride!==undefined&&amountOverride!==null&&amountOverride!=='')?Number(amountOverride)||0:(Number(r.amount)||0);const dueOccurrence=nextRecurringOccurrence(r);const dueDate=dueOccurrence?localDateStr(dueOccurrence):today();state.transactions.push({id:uid(),type:'expense',amount:amt,category:r.category,accountId:selectedAccountId,fromAccountId:null,fee:0,date:today(),dueDate,recurringId:r.id,note:r.name,createdAt:Date.now()});r.lastPaidDate=dueDate;closeSheet();render();saveState()}
+  function deleteRecurring(id){state.recurring=state.recurring.filter(x=>x.id!==id);closeSheet();render();saveState()}
+  function openRecurringTransfer(id){
+    if(state.accounts.length<2){toast('Add at least two accounts first.');return}
+    const r=id?state.recurringTransfers.find(x=>x.id===id):null;
+    openSheet(`<h2>${r?'Edit Recurring Transfer':'Add Recurring Transfer'}</h2><div class="field"><label for="rtr-name">Name</label><input class="input" id="rtr-name" value="${esc(r?.name||'')}" placeholder="e.g. Move to savings"></div><div class="field"><label for="rtr-amount">Amount (optional)</label><input class="input" id="rtr-amount" type="number" step=".01" value="${r?.amount||''}" placeholder="Leave blank if it varies"></div><div class="field"><label for="rtr-from">From Account (optional)</label><select class="input" id="rtr-from"><option value="" ${!r?.fromAccountId?'selected':''}>No account selected</option>${state.accounts.map(a=>`<option value="${a.id}" ${r?.fromAccountId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="field"><label for="rtr-to">To Account (optional)</label><select class="input" id="rtr-to"><option value="" ${!r?.toAccountId?'selected':''}>No account selected</option>${state.accounts.map(a=>`<option value="${a.id}" ${r?.toAccountId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div><div class="field"><label for="rtr-frequency">Frequency</label><select class="input" id="rtr-frequency"><option ${r?.frequency==='Monthly'?'selected':''}>Monthly</option><option ${r?.frequency==='Weekly'?'selected':''}>Weekly</option><option ${r?.frequency==='Quarterly'?'selected':''}>Quarterly</option><option ${r?.frequency==='Annual'?'selected':''}>Annual</option></select></div><div class="field"><label for="rtr-mode">Payment Method</label><select class="input" id="rtr-mode"><option value="manual" ${r?.mode!=='auto'?'selected':''}>Manual — mark as complete</option><option value="auto" ${r?.mode==='auto'?'selected':''}>Auto — move automatically</option></select></div><div class="field"><label for="rtr-start-date">Start Date</label><input class="input" id="rtr-start-date" type="date" value="${r?.startDate||today()}"></div><button class="btn btn-primary save-control" style="width:100%" onclick="saveRecurringTransfer('${id||''}')">Save</button>${r&&r.mode!=='auto'?`<button class="btn btn-secondary save-control" style="width:100%" onclick="markRecurringTransferPaid('${id}')">Mark as Complete</button>`:''}${r?`<div class="button-row"><button class="btn btn-secondary" style="color:var(--color-negative);border-color:var(--color-negative)" onclick="confirmAction('Delete this recurring transfer?',()=>deleteRecurringTransfer('${id}'))">Delete</button></div>`:''}<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">Cancel</button>`);
+  }
+  function saveRecurringTransfer(id){
+    const name=document.getElementById('rtr-name').value.trim();
+    if(!name){toast('Enter a transfer name.');return}
+    const amount=Number(document.getElementById('rtr-amount').value)||0,fromAccountId=document.getElementById('rtr-from').value,toAccountId=document.getElementById('rtr-to').value;
+    if(fromAccountId&&toAccountId&&fromAccountId===toAccountId){toast('From and To accounts must be different.');return}
+    const item={id:id||uid(),name,amount,fromAccountId,toAccountId,fee:0,frequency:document.getElementById('rtr-frequency').value,mode:document.getElementById('rtr-mode').value,startDate:document.getElementById('rtr-start-date').value||today(),active:id?(state.recurringTransfers.find(x=>x.id===id)?.active??true):true};
+    if(id)state.recurringTransfers[state.recurringTransfers.findIndex(x=>x.id===id)]=item;else state.recurringTransfers.push(item);closeSheet();render();saveState();
+  }
+  function markRecurringTransferPaid(id,fromAccountId,toAccountId,amountOverride){
+    const r=state.recurringTransfers.find(x=>x.id===id);if(!r)return;
+    const selectedFrom=fromAccountId||r.fromAccountId, selectedTo=toAccountId||r.toAccountId;
+    const from=state.accounts.find(a=>a.id===selectedFrom),to=state.accounts.find(a=>a.id===selectedTo);
+    if(!from||!to){toast('Choose both accounts before completing this transfer.');return}
+    const amt=(amountOverride!==undefined&&amountOverride!==null&&amountOverride!=='')?Number(amountOverride)||0:(Number(r.amount)||0);
+    const dueOccurrence=nextRecurringTransferOccurrence(r);const dueDate=dueOccurrence?localDateStr(dueOccurrence):today();
+    state.transactions.push({id:uid(),type:'payment',amount:amt,category:'Payment / Transfer',accountId:selectedTo,fromAccountId:selectedFrom,fee:Number(r.fee)||0,date:today(),dueDate,recurringTransferId:r.id,note:r.name,createdAt:Date.now()});
+    r.lastPaidDate=dueDate;closeSheet();render();saveState();
+  }
+  function deleteRecurringTransfer(id){state.recurringTransfers=state.recurringTransfers.filter(x=>x.id!==id);closeSheet();render();saveState()}
+  function promptAction(label,onDone){pendingAction=onDone;document.getElementById('dialog-content').innerHTML=`<p class="dialog-title">${esc(label)}</p><input class="input" id="dialog-input"><div class="button-row"><button class="btn btn-secondary" onclick="closeDialog()">Cancel</button><button class="btn btn-primary" onclick="runPrompt()">Save</button></div>`;document.getElementById('dialog-overlay').classList.remove('hidden');setTimeout(()=>document.getElementById('dialog-input').focus(),0)}
+  function runPrompt(){const v=document.getElementById('dialog-input').value.trim(),fn=pendingAction;closeDialog();if(v&&fn)fn(v)}
+  function addSetting(type,label){promptAction(label,v=>{if(!state[type].includes(v)){state[type].push(v);render();saveState()}})}
+  function renameColorTag(color){promptAction('Rename '+colorTagLabel(color),v=>{state.colorTags={...(state.colorTags||colorTagDefaults),[color]:v};state.tags=[...new Set(palette.map(c=>state.colorTags[c]))];state.accounts.forEach(a=>{if(a.color===color)a.tags=[v]});render();saveState()})}
+  function renameSetting(type,old){promptAction('Rename '+old,v=>{const i=state[type].indexOf(old);if(i>-1){state[type][i]=v;if(type==='banks')state.accounts.forEach(a=>{if(a.bank===old)a.bank=v});if(type.includes('Categories'))state.transactions.forEach(t=>{if(t.category===old)t.category=v});if(type==='tags')state.accounts.forEach(a=>{if(a.tags&&a.tags.includes(old))a.tags=a.tags.map(t=>t===old?v:t)});render();saveState()}})}
+  function removeSetting(type,item){confirmAction('Remove '+item+' from this list?',()=>{state[type]=state[type].filter(x=>x!==item);if(type==='tags')state.accounts.forEach(a=>{if(a.tags)a.tags=a.tags.filter(t=>t!==item)});render();saveState()})}
+  function resetAll(){state=freshState();applyAppName(state.appName);render();saveState()}
+  function applyAppName(name){
+    document.title=name;
+    const h1=document.querySelector('.topbar h1'); if(h1)h1.textContent=name;
+    const lockTitle=document.querySelector('.lock-title'); if(lockTitle)lockTitle.textContent=name;
+    const manifestLink=document.querySelector('link[rel="manifest"]');
+    if(manifestLink){
+      const manifestObj={name,short_name:name.length>12?name.slice(0,12):name,display:'standalone',start_url:'.',background_color:'#fcfcfc',theme_color:'#2557d4',icons:[{src:'icon-192.png',sizes:'192x192',type:'image/png'},{src:'icon-512.png',sizes:'512x512',type:'image/png'}]};
+      manifestLink.setAttribute('href','data:application/manifest+json,'+encodeURIComponent(JSON.stringify(manifestObj)));
+    }
+  }
+  function renameApp(){
+    promptAction('Rename the app (currently "'+state.appName+'")', v=>{
+      const trimmed=v.trim(); if(!trimmed){toast('Enter an app name.');return}
+      state.appName=trimmed;
+      applyAppName(trimmed);
+      render();
+      saveState();
+    });
+  }
+  function openChangePasscode(){
+    pendingAction=null;
+    document.getElementById('dialog-content').innerHTML=`<p class="dialog-title">Change Passcode</p><div class="field"><label for="pc-current">Current Passcode</label><input class="input" id="pc-current" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="••••"></div><div class="field"><label for="pc-new">New Passcode</label><input class="input" id="pc-new" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="4 digits"></div><div class="field"><label for="pc-confirm">Confirm New Passcode</label><input class="input" id="pc-confirm" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="4 digits"></div><div class="button-row"><button class="btn btn-secondary" onclick="closeDialog()">Cancel</button><button class="btn btn-primary" onclick="saveNewPasscode()">Save</button></div>`;
+    document.getElementById('dialog-overlay').classList.remove('hidden');
+  }
+  function saveNewPasscode(){
+    const current=document.getElementById('pc-current').value;
+    const next=document.getElementById('pc-new').value;
+    const confirmVal=document.getElementById('pc-confirm').value;
+    if(current!==(state.passcode||DEFAULT_PASSCODE)){toast('Current passcode is incorrect.');return}
+    if(!/^\d{4}$/.test(next)){toast('New passcode must be exactly 4 digits.');return}
+    if(next!==confirmVal){toast('New passcode entries do not match.');return}
+    state.passcode=next;
+    closeDialog();
+    saveState();
+    toast('Passcode updated.');
+  }
+  function confirmAction(message,yes){pendingAction=yes;document.getElementById('dialog-content').innerHTML=`<p class="dialog-body">${esc(message)}</p><div class="button-row"><button class="btn btn-secondary" onclick="closeDialog()">Cancel</button><button class="btn btn-primary" style="background:var(--color-accent-700)" onclick="runConfirm()">Confirm</button></div>`;document.getElementById('dialog-overlay').classList.remove('hidden')}
+  function runConfirm(){const fn=pendingAction;closeDialog();if(fn)fn()}
+  function closeDialog(){document.getElementById('dialog-overlay').classList.add('hidden')}
+  function toast(message){const n=document.createElement('div');n.textContent=message;n.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--color-text);color:var(--color-bg);padding:10px 18px;z-index:100;font-size:13px;font-weight:600;max-width:90%;text-align:center';document.body.appendChild(n);setTimeout(()=>n.remove(),2400)}
+
+  loadState();
+  applyAppName(state.appName||DEFAULT_APP_NAME);
+  render();
+</script>
+</body>
+</html>
